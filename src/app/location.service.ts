@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable, Subject} from 'rxjs';
+import {Observable, ReplaySubject, Subject} from 'rxjs';
 
 export const LOCATIONS: string = 'locations';
 
@@ -7,7 +7,7 @@ export const LOCATIONS: string = 'locations';
 export class LocationService {
 
     private readonly locations: string[];
-    private readonly newLocationEmitter = new Subject<string>();
+    private readonly newLocationEmitter = new ReplaySubject<string>();
     private readonly deletedLocationEmitter = new Subject<string>();
 
     constructor() {
