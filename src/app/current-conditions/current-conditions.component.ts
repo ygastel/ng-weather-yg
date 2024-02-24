@@ -1,22 +1,35 @@
-import {Component, inject, Signal} from '@angular/core';
-import {WeatherService} from "../weather.service";
-import {LocationService} from "../location.service";
-import {Router} from "@angular/router";
+import {Component, inject, OnDestroy, OnInit, Signal} from '@angular/core';
+import {WeatherService} from '../weather.service';
+import {LocationService} from '../location.service';
+import {Router} from '@angular/router';
 import {ConditionsAndZip} from '../conditions-and-zip.type';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
-  selector: 'app-current-conditions',
-  templateUrl: './current-conditions.component.html',
-  styleUrls: ['./current-conditions.component.css']
+    selector: 'app-current-conditions',
+    templateUrl: './current-conditions.component.html',
+    styleUrls: ['./current-conditions.component.css']
 })
-export class CurrentConditionsComponent {
+export class CurrentConditionsComponent implements OnInit, OnDestroy {
 
-  private weatherService = inject(WeatherService);
-  private router = inject(Router);
-  protected locationService = inject(LocationService);
-  protected currentConditionsByZip: Signal<ConditionsAndZip[]> = this.weatherService.getCurrentConditions();
+    protected locationService = inject(LocationService);
+    protected weatherService = inject(WeatherService);
+    protected currentConditionsByZip: Signal<ConditionsAndZip[]> = this.weatherService.getCurrentConditions();
+    private router = inject(Router);
 
-  showForecast(zipcode : string){
-    this.router.navigate(['/forecast', zipcode])
-  }
+    private readonly onDestroy = new Subject<void>();
+
+    showForecast(zipcode: string) {
+        this.router.navigate(['/forecast', zipcode])
+    }
+
+    ngOnInit(): void {
+        this.locationService.getNewLocation().pipe(takeUntil(this.onDestroy)).subscribe(newLocation => this.weatherService.addCurrentConditions(newLocation));
+        this.locationService.getRemovedLocation().pipe(takeUntil(this.onDestroy)).subscribe(removedLocation => this.weatherService.removeCurrentConditions(removedLocation));
+    }
+
+    ngOnDestroy(): void {
+        this.onDestroy.next();
+    }
 }
