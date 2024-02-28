@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable, ReplaySubject, Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 
 export const LOCATIONS: string = 'locations';
 
@@ -7,12 +7,19 @@ export const LOCATIONS: string = 'locations';
 export class LocationService {
 
     private readonly locations: string[];
-    private readonly newLocationEmitter = new ReplaySubject<string>();
+    private readonly newLocationEmitter = new Subject<string>();
     private readonly deletedLocationEmitter = new Subject<string>();
 
     constructor() {
         this.locations = [];
-        this.loadLocationFromStorage().forEach(oneLocation => this.addLocation(oneLocation));
+    }
+
+    public initFromStorage(): void {
+        this.loadLocationFromStorage().forEach(oneLocation => {
+            if (!this.locations.includes(oneLocation)) {
+                this.addLocation(oneLocation)
+            }
+        });
     }
 
     public addLocation(zipcode: string) {

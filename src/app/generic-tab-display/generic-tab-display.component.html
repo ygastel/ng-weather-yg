@@ -1,0 +1,14 @@
+<div style="display: flex;  width: 100%">
+    <ng-container *ngFor="let oneHeader of headerList">
+        <div (click)="selectKey(oneHeader.headerSelectorKey)" [ngClass]="{'selected' : selectedKey === oneHeader.headerSelectorKey}"
+             style="border: solid 1px; margin-right: .5rem; cursor: pointer; transition: ease-in-out 250ms">
+            <ng-container *ngTemplateOutlet="oneHeader.template;">
+            </ng-container>
+        </div>
+    </ng-container>
+</div>
+
+<div style="border: solid 1px">
+    <ng-container *ngTemplateOutlet="selectedContent?.template">
+    </ng-container>
+</div>
