@@ -1,9 +1,10 @@
 <div>
     <app-generic-tab-display>
-        <div (click)="showForecast(location.zip)" *ngFor="let location of currentConditionsByZip()" class="well flex">
+        <div (click)="showForecast(location.zip)" *ngFor="let location of currentConditionsByZip()" class="flex">
             <h3 *headerSelector="let data; key: location.zip">{{ location.data.name }} ({{ location.zip }}) <span (click)="locationService.removeLocation(location.zip)" class="close">&times;</span>
             </h3>
-            <div *contentSelector="let data; key: location.zip">
+            <div *contentSelector="let data; key: location.zip" class="well" style="display: flex">
+                <div>
                 <h4>Current conditions: {{ location.data.weather[0].main }}</h4>
                 <h4>Temperatures today:</h4>
                 <p>
@@ -14,8 +15,7 @@
                 <p>
                     <a [routerLink]="['/forecast', location.zip]">Show 5-day forecast for {{ location.data.name }}</a>
                 </p>
-            </div>
-            <div>
+                </div>
                 <img [src]="weatherService.getWeatherIcon(location.data.weather[0].id)" alt="weather icon">
             </div>
         </div>
