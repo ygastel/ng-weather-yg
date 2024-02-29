@@ -4,7 +4,7 @@ import {LocationService} from '../location.service';
 import {Router} from '@angular/router';
 import {ConditionsAndZip} from '../conditions-and-zip.type';
 import {Subject} from 'rxjs';
-import {takeUntil, tap} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     selector: 'app-current-conditions',
@@ -26,8 +26,7 @@ export class CurrentConditionsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
 
-        this.locationService.getNewLocation().pipe(tap(x => console.log('add:', x)),
-            takeUntil(this.onDestroy)).subscribe(newLocation => this.weatherService.addCurrentConditions(newLocation));
+        this.locationService.getNewLocation().pipe(takeUntil(this.onDestroy)).subscribe(newLocation => this.weatherService.addCurrentConditions(newLocation));
         this.locationService.getRemovedLocation().pipe(takeUntil(this.onDestroy)).subscribe(removedLocation => this.weatherService.removeCurrentConditions(removedLocation));
         this.locationService.initFromStorage();
     }

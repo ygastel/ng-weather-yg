@@ -9,11 +9,6 @@ export class HeaderSelectorDirective {
     public headerSelectorKey: string;
 
     constructor(public readonly template: TemplateRef<any>) {
-        console.log(`j'ai du contenu:`, template);
-        setTimeout(() => {
-            console.log(`j'ai une clé : `, this.headerSelectorKey);
-        }, 2000);
-
     }
 
 }
@@ -26,7 +21,6 @@ export class TabContentSelectorDirective {
     @Input() contentSelectorKey: string;
 
     constructor(public readonly template: TemplateRef<any>) {
-        console.log(`je suis le content:`, template);
     }
 
 }

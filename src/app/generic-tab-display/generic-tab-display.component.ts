@@ -23,13 +23,20 @@ export class GenericTabDisplayComponent implements AfterContentChecked {
 
     public selectedKey: string;
 
-    constructor() {
-        console.log('creating');
-    }
-
 
     ngAfterContentChecked(): void {
         this.selectFirstAvailable();
+        this.changeTabWhenSelectedOneIsRemoved();
+        this.clearTabWhenNoMoreTabs();
+    }
+
+    private clearTabWhenNoMoreTabs() {
+        if (this.headerList.length === 0) {
+            this.selectedContent = undefined;
+        }
+    }
+
+    private changeTabWhenSelectedOneIsRemoved() {
         if (this.headerList.length > 0 && !this.headerList.find(x => x.headerSelectorKey === this.selectedKey)) {
             this.selectKey(this.headerList.get(0).headerSelectorKey);
         }
@@ -38,7 +45,6 @@ export class GenericTabDisplayComponent implements AfterContentChecked {
     selectKey(headerSelectorKey: string) {
         this.selectedKey = headerSelectorKey;
         this.selectedContent = this.contentList.find(x => x.contentSelectorKey === headerSelectorKey);
-        console.log('this.selectedContent : ', this.selectedContent);
     }
 
     private selectFirstAvailable() {
